@@ -77,9 +77,9 @@ const Navbar: React.FC = () => {
         {/* Logo Section */}
         <div className="flex items-center gap-3 cursor-pointer group pl-2" onClick={() => { navigate('/'); window.scrollTo(0,0); }}>
           <div className="w-9 h-9 bg-white text-black flex items-center justify-center font-display font-bold text-lg rounded-full group-hover:rotate-180 transition-transform duration-500 shadow-[0_0_10px_rgba(255,255,255,0.3)]">
-            S
+            G
           </div>
-          <span className="font-display font-bold text-lg tracking-tight hidden sm:block text-white">SILVER</span>
+          <span className="font-display font-bold text-lg tracking-tight hidden sm:block text-white">GHOST LINK</span>
         </div>
 
         {/* Navigation Links - Premium Text Swap Animation */}

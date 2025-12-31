@@ -74,7 +74,7 @@ const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
        {/* Top Section - Static Title */}
        <div ref={contentRef} className="relative z-10 px-6 md:px-12 pt-12 flex justify-center items-start">
              <h1 className="font-display font-bold text-4xl md:text-6xl tracking-tighter leading-none text-center uppercase">
-                SILVER PROTOCOL
+                ghost link
              </h1>
        </div>
 
