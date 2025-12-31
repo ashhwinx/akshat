@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CYBER-PREMIUM WEB3</title>
+    
+    <!-- Fonts -->
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              cyber: {
+                black: '#050505',
+                dark: '#0a0a0a',
+                silver: '#C0C0C0',
+                white: '#FFFFFF',
+                dim: '#2a2a2a'
+              }
+            },
+            fontFamily: {
+              sans: ['Instrument Sans', 'sans-serif'],
+              display: ['Clash Display', 'sans-serif'],
+              tech: ['Rajdhani', 'sans-serif'],
+            },
+            cursor: {
+              none: 'none',
+            },
+            backgroundImage: {
+              'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+              'metallic': 'linear-gradient(180deg, #FFFFFF 0%, #C0C0C0 40%, #808080 100%)',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #000000;
+        color: #ffffff;
+        overflow-x: hidden; /* Prevent horizontal scroll */
+      }
+      
+      /* Lenis Recommended CSS */
+      html.lenis, html.lenis body {
+        height: auto;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+      .lenis.lenis-scrolling iframe {
+        pointer-events: none;
+      }
+
+      /* Custom Scrollbar hide */
+      ::-webkit-scrollbar {
+        width: 0px;
+        background: transparent;
+      }
+      
+      /* Selection Color */
+      ::selection {
+        background: #C0C0C0;
+        color: #000000;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "@react-three/drei": "https://esm.sh/@react-three/drei@^10.7.7",
+    "three": "https://esm.sh/three@^0.182.0",
+    "gsap/": "https://esm.sh/gsap@^3.14.2/",
+    "gsap": "https://esm.sh/gsap@^3.14.2",
+    "@react-three/fiber": "https://esm.sh/@react-three/fiber@^9.5.0",
+    "lenis": "https://esm.sh/lenis@^1.3.17",
+    "framer-motion": "https://esm.sh/framer-motion@^12.23.26",
+    "@react-spring/three": "https://esm.sh/@react-spring/three@^10.0.3",
+    "@react-three/postprocessing": "https://esm.sh/@react-three/postprocessing@^3.0.4",
+    "react-router-dom": "https://esm.sh/react-router-dom@6.22.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

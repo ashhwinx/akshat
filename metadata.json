@@ -1,0 +1,5 @@
+{
+  "name": "Cyber-Premium Web3 Environment",
+  "description": "A high-performance, maximalist Web3 environment featuring smooth scrolling, interactive 3D grid backgrounds, and a cyber-premium aesthetic using React, Three.js, and Tailwind CSS.",
+  "requestFramePermissions": []
+}
