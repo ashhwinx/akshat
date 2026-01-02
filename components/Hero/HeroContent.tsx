@@ -7,13 +7,12 @@ const smoothTransition = {
   ease: [0.22, 1, 0.36, 1],
 };
 
-// --- STRETCH TEXT COMPONENT (With BIG GAP) ---
+// --- STRETCH TEXT COMPONENT ---
 const StretchText: React.FC<{ text: string; className?: string }> = ({ text, className }) => {
   return (
     <motion.div
       initial="initial"
       whileHover="hovered"
-      // 'flex' aligns letters. 'overflow-visible' allows the stretch to go outside.
       className={`flex justify-center cursor-pointer select-none overflow-visible ${className}`}
     >
       {text.split("").map((char, i) => (
@@ -23,22 +22,21 @@ const StretchText: React.FC<{ text: string; className?: string }> = ({ text, cla
             initial: { 
               scaleX: 1, 
               scaleY: 1, 
-              marginRight: "0px" // Normal Gap
+              marginRight: "0px" 
             },
             hovered: {
-              scaleX: 1, // Horizontal Stretch
-              scaleY: 1,   // Height Fixed
-              marginRight: "12px", // INCREASED GAP (Gap badhaya)
+              scaleX: 1, 
+              scaleY: 1,   
+              marginRight: "12px", 
               transition: {
                 type: "spring",
-                stiffness: 200, // Thoda soft spring taaki gap smooth lage
+                stiffness: 200,
                 damping: 15,
                 mass: 0.8,
                 delay: i * 0.04
               }
             }
           }}
-          // 'last:mr-0' ensures the last letter doesn't get extra margin to keep it centered
           className="inline-block origin-center will-change-transform last:mr-0"
         >
           {char === " " ? "\u00A0" : char}
@@ -95,13 +93,6 @@ const BitcoinCard: React.FC<{ className?: string }> = ({ className }) => {
               <path d="M0,50 L10,45 L20,48 L30,30 L40,35 L50,20 L60,25 L70,10 L80,15 L90,5 L100,0 L110,10 L120,5 V90 H0 Z" fill="url(#btc-grad-fill)" />
               <path d="M0,50 L10,45 L20,48 L30,30 L40,35 L50,20 L60,25 L70,10 L80,15 L90,5 L100,0 L110,10 L120,5" fill="none" stroke="#f59e0b" strokeWidth="1.5" strokeLinejoin="round" />
             </svg>
-            <div className="absolute top-3 right-3 flex flex-col gap-[3px] items-end opacity-80">
-              <div className="h-[2px] w-8 bg-red-500 rounded-sm opacity-60" />
-              <div className="h-[2px] w-5 bg-red-500 rounded-sm opacity-40" />
-              <div className="h-[2px] w-3 bg-red-500 rounded-sm opacity-30" />
-              <div className="h-[2px] w-6 bg-green-500 rounded-sm mt-1 opacity-60" />
-              <div className="h-[2px] w-10 bg-green-500 rounded-sm opacity-80" />
-            </div>
           </div>
         </div>
         <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-60" />
@@ -111,9 +102,9 @@ const BitcoinCard: React.FC<{ className?: string }> = ({ className }) => {
 };
 
 // ==========================================
-// 2. ETHEREUM CARD
+// 2. SOLANA CARD (Converted from Ethereum)
 // ==========================================
-const EthereumCard: React.FC<{ className?: string }> = ({ className }) => {
+const SolanaCard: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <motion.div 
       initial={{ opacity: 0, x: -100, rotate: -10 }} 
@@ -122,42 +113,50 @@ const EthereumCard: React.FC<{ className?: string }> = ({ className }) => {
       style={{ willChange: "transform, opacity" }}
       className={`absolute hidden md:flex flex-col w-[320px] h-[160px] z-10 ${className}`}
     >
-      <div className="relative w-full h-full bg-[#0a0a0a]/80 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden shadow-[0_0_30px_-10px_rgba(59,130,246,0.3)] flex flex-col group hover:border-blue-500/30 transition-colors duration-200">
+      <div className="relative w-full h-full bg-[#0a0a0a]/80 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden shadow-[0_0_30px_-10px_rgba(153,69,255,0.3)] flex flex-col group hover:border-purple-500/30 transition-colors duration-200">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:10px_10px]" />
+        
         <div className="flex justify-between items-center p-3 border-b border-white/5 bg-white/[0.02] relative z-10">
           <div className="flex items-center gap-2.5">
-            <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-[10px] text-white shadow-lg shadow-blue-500/20">♦</div>
-            <span className="text-xs font-display font-bold text-white tracking-widest">ETH / NET</span>
+            {/* Solana Logo Style Icon */}
+            <div className="w-5 h-5 rounded-sm bg-gradient-to-tr from-[#9945FF] via-[#14F195] to-[#14F195] flex flex-col items-center justify-center gap-[2px] shadow-lg shadow-purple-500/20 p-[3px]">
+               <div className="w-full h-[2px] bg-black/80 rounded-full rotate-[-15deg]" />
+               <div className="w-full h-[2px] bg-black/80 rounded-full rotate-[-15deg]" />
+               <div className="w-full h-[2px] bg-black/80 rounded-full rotate-[-15deg]" />
+            </div>
+            <span className="text-xs font-display font-bold text-white tracking-widest">SOL / USD</span>
           </div>
-          <div className="text-[9px] font-mono font-bold text-blue-300 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20 shadow-[0_0_10px_-2px_rgba(59,130,246,0.3)]">GAS: 12 Gwei</div>
+          <div className="text-[9px] font-mono font-bold text-[#14F195] bg-[#14F195]/10 px-2 py-0.5 rounded border border-[#14F195]/20 shadow-[0_0_10px_-2px_rgba(20,241,149,0.3)]">TPS: 2,451</div>
         </div>
+
         <div className="flex-1 relative flex flex-col justify-between p-4 z-10">
           <div className="flex justify-between items-end">
             <div>
-              <div className="text-xl font-display font-bold text-white tracking-tight drop-shadow-sm">$3,450.12</div>
-              <div className="text-[10px] font-mono text-red-400 mt-1 flex items-center gap-1 font-bold">
-                <svg width="6" height="6" viewBox="0 0 6 6" fill="none" className="rotate-180"><path d="M3 0L6 4H0L3 0Z" fill="currentColor"/></svg>0.85% (24h)
+              <div className="text-xl font-display font-bold text-white tracking-tight drop-shadow-sm">$142.65</div>
+              <div className="text-[10px] font-mono text-green-400 mt-1 flex items-center gap-1 font-bold">
+                <svg width="6" height="6" viewBox="0 0 6 6" fill="none"><path d="M3 0L6 4H0L3 0Z" fill="currentColor"/></svg>5.12% (24h)
               </div>
             </div>
             <div className="text-right">
-              <div className="text-[9px] text-white/40 font-mono tracking-wider mb-0.5">TPS RATE</div>
-              <div className="text-sm font-mono text-white font-bold">28.4 <span className="text-[9px] text-white/30 font-normal">tx/s</span></div>
+              <div className="text-[9px] text-white/40 font-mono tracking-wider mb-0.5">NETWORK</div>
+              <div className="text-sm font-mono text-white font-bold">Mainnet<span className="text-[9px] text-purple-400 font-normal ml-1">Beta</span></div>
             </div>
           </div>
+          
           <div className="absolute bottom-0 left-0 right-0 h-[60px] opacity-70">
              <svg className="w-full h-full" preserveAspectRatio="none">
                <defs>
-                 <linearGradient id="eth-grad-fill" x1="0" x2="0" y1="0" y2="1">
-                   <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.4" />
-                   <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
+                 <linearGradient id="sol-grad-fill" x1="0" x2="0" y1="0" y2="1">
+                   <stop offset="0%" stopColor="#9945FF" stopOpacity="0.4" />
+                   <stop offset="100%" stopColor="#14F195" stopOpacity="0" />
                  </linearGradient>
                </defs>
-               <path d="M0,60 C20,60 30,30 50,35 C70,40 80,20 100,15 C120,10 150,30 300,50 V60 H0 Z" fill="url(#eth-grad-fill)" />
-               <path d="M0,60 C20,60 30,30 50,35 C70,40 80,20 100,15 C120,10 150,30 300,50" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" />
+               <path d="M0,60 C40,55 80,20 120,45 C160,70 240,10 320,30 V60 H0 Z" fill="url(#sol-grad-fill)" />
+               <path d="M0,60 C40,55 80,20 120,45 C160,70 240,10 320,30" fill="none" stroke="#9945FF" strokeWidth="2" strokeLinecap="round" />
              </svg>
           </div>
         </div>
-        <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-60" />
+        <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-[#9945FF] to-transparent opacity-60" />
       </div>
     </motion.div>
   );
@@ -193,8 +192,8 @@ const HeroContent: React.FC = () => {
       />
 
       {/* CARDS */}
-      <BitcoinCard className="top-[15%] right-[8%]" />
-      <EthereumCard className="bottom-[20%] left-[5%]" />
+      <BitcoinCard className="top-[4%] right-[5%]" />
+      <SolanaCard className="bottom-[20%] left-[5%]" />
 
       {/* TEXT CONTENT */}
       <div className="relative z-30 flex flex-col items-center">
@@ -217,7 +216,6 @@ const HeroContent: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ ...smoothTransition, delay: 3.2 }}
-              // Using Solid Premium Grey to ensure visibility
               className="font-display font-bold text-6xl md:text-[7.5rem] uppercase opacity-90 drop-shadow-lg text-gray-200"
           >
              <StretchText 
@@ -234,7 +232,6 @@ const HeroContent: React.FC = () => {
             style={{ willChange: "transform, opacity" }}
             className="flex flex-col sm:flex-row mt-12 mb-8 items-center gap-6"
         >
-          {/* Primary Button */}
           <button className="group relative h-12 px-10 overflow-hidden bg-white text-black font-display font-bold text-sm tracking-widest uppercase transition-all duration-200 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.5)] flex items-center justify-center rounded-sm">
               <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-white translate-y-full group-hover:translate-y-0 transition-transform duration-200 ease-out" />
               <span className="relative z-10 flex items-center gap-3">
@@ -243,13 +240,7 @@ const HeroContent: React.FC = () => {
               </span>
           </button>
           
-          {/* Secondary Button */}
-          <button className="group relative h-12 px-8 overflow-hidden border border-white/30 hover:border-white/80 bg-white/[0.05] backdrop-blur-sm text-white font-mono text-xs tracking-[0.2em] uppercase transition-all duration-200 hover:bg-white/10 w-[200px] rounded-sm">
-              <span className="relative z-10 group-hover:text-white transition-colors duration-200">
-                VIEW MARKETS
-              </span>
-              <div className="absolute bottom-0 left-0 w-full h-[1px] bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-          </button>
+          
         </motion.div>
       </div>
 
