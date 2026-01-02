@@ -1,47 +1,50 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-// --- OPTIMIZED ANIMATION CONFIG ---
+// --- ANIMATION CONFIG ---
 const smoothTransition = {
   duration: 0.8,
   ease: [0.22, 1, 0.36, 1],
 };
 
-// --- PREMIUM ROLLING TEXT COMPONENT ---
-// Ye text ko shutter ki tarah slide karega hover par
-const RollingText: React.FC<{ text: string; className?: string }> = ({ text, className }) => {
+// --- STRETCH TEXT COMPONENT (With BIG GAP) ---
+const StretchText: React.FC<{ text: string; className?: string }> = ({ text, className }) => {
   return (
-    <div className="relative overflow-hidden block h-[1.1em] leading-[1.1em] group cursor-pointer">
-      <motion.div
-        initial="initial"
-        whileHover="hovered"
-        className="relative"
-      >
-        {/* 1. Original Text (Slides Up & Out) */}
+    <motion.div
+      initial="initial"
+      whileHover="hovered"
+      // 'flex' aligns letters. 'overflow-visible' allows the stretch to go outside.
+      className={`flex justify-center cursor-pointer select-none overflow-visible ${className}`}
+    >
+      {text.split("").map((char, i) => (
         <motion.span
+          key={i}
           variants={{
-            initial: { y: 0 },
-            hovered: { y: "-100%" },
+            initial: { 
+              scaleX: 1, 
+              scaleY: 1, 
+              marginRight: "0px" // Normal Gap
+            },
+            hovered: {
+              scaleX: 1, // Horizontal Stretch
+              scaleY: 1,   // Height Fixed
+              marginRight: "12px", // INCREASED GAP (Gap badhaya)
+              transition: {
+                type: "spring",
+                stiffness: 200, // Thoda soft spring taaki gap smooth lage
+                damping: 15,
+                mass: 0.8,
+                delay: i * 0.04
+              }
+            }
           }}
-          transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
-          className={`block ${className}`}
+          // 'last:mr-0' ensures the last letter doesn't get extra margin to keep it centered
+          className="inline-block origin-center will-change-transform last:mr-0"
         >
-          {text}
+          {char === " " ? "\u00A0" : char}
         </motion.span>
-
-        {/* 2. Duplicate Text (Slides Up & In) */}
-        <motion.span
-          variants={{
-            initial: { y: "100%" },
-            hovered: { y: 0 },
-          }}
-          transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
-          className={`absolute inset-0 block ${className}`}
-        >
-          {text}
-        </motion.span>
-      </motion.div>
-    </div>
+      ))}
+    </motion.div>
   );
 };
 
@@ -165,7 +168,7 @@ const EthereumCard: React.FC<{ className?: string }> = ({ className }) => {
 // ==========================================
 const HeroContent: React.FC = () => {
   return (
-    <div className="relative flex flex-col items-center justify-center text-center w-full h-full z-20 pb-40 select-none overflow-hidden">
+    <div className="relative flex flex-col items-center justify-center text-center w-full h-full pointer-events-auto z-20 pb-40 select-none overflow-hidden">
       
       {/* AMBIENT ORBS */}
       <motion.div 
@@ -194,8 +197,7 @@ const HeroContent: React.FC = () => {
       <EthereumCard className="bottom-[20%] left-[5%]" />
 
       {/* TEXT CONTENT */}
-      {/* pointer-events-auto ensures buttons and text interactions work over the 3D canvas */}
-      <div className="relative z-30 flex flex-col items-center pointer-events-auto">
+      <div className="relative z-30 flex flex-col items-center">
         
         {/* Main Headline */}
         <motion.div
@@ -207,24 +209,24 @@ const HeroContent: React.FC = () => {
         >
           {/* TOP LINE: TRADE */}
           <div className="font-display font-bold text-6xl md:text-[7.5rem] text-white uppercase drop-shadow-2xl">
-             <RollingText text="TRADE" />
+             <StretchText text="TRADE" />
           </div>
 
-          {/* BOTTOM LINE: LIMITLESS (Gradient) */}
+          {/* BOTTOM LINE: LIMITLESS */}
           <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ ...smoothTransition, delay: 3.2 }}
-              className="font-display font-bold text-6xl md:text-[7.5rem] uppercase opacity-90 drop-shadow-lg"
+              // Using Solid Premium Grey to ensure visibility
+              className="font-display font-bold text-6xl md:text-[7.5rem] uppercase opacity-90 drop-shadow-lg text-gray-200"
           >
-             <RollingText 
+             <StretchText 
                text="LIMITLESS" 
-               className="text-transparent bg-clip-text bg-gradient-to-b from-cyber-silver via-white to-cyber-dim"
              />
           </motion.div>
         </motion.div>
 
-        {/* Buttons - MORE VISIBLE & STYLISH */}
+        {/* Buttons */}
         <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -241,7 +243,13 @@ const HeroContent: React.FC = () => {
               </span>
           </button>
           
-          
+          {/* Secondary Button */}
+          <button className="group relative h-12 px-8 overflow-hidden border border-white/30 hover:border-white/80 bg-white/[0.05] backdrop-blur-sm text-white font-mono text-xs tracking-[0.2em] uppercase transition-all duration-200 hover:bg-white/10 w-[200px] rounded-sm">
+              <span className="relative z-10 group-hover:text-white transition-colors duration-200">
+                VIEW MARKETS
+              </span>
+              <div className="absolute bottom-0 left-0 w-full h-[1px] bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+          </button>
         </motion.div>
       </div>
 

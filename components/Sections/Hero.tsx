@@ -5,7 +5,9 @@ import { PerspectiveCamera, PerformanceMonitor } from '@react-three/drei';
 import HeroBackground from '../Hero/HeroBackground';
 import HeroSphere from '../Hero/HeroSphere';
 import HeroContent from '../Hero/HeroContent';
+import HeroCoins from '../Hero/HeroCoins';
 import '../../types';
+
 
 const Hero: React.FC = () => {
   // OPTIMIZATION: State to dynamically adjust quality based on device speed
@@ -47,6 +49,8 @@ const Hero: React.FC = () => {
             
             <HeroBackground />
             <HeroSphere />
+            <HeroCoins/>
+            
             
           </Suspense>
         </Canvas>
@@ -54,8 +58,15 @@ const Hero: React.FC = () => {
 
       {/* HTML Content Layer */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-start pt-[15vh]">
+        
          <HeroContent />
+
+
+            
+        
+         
       </div>
+      
       
       {/* Bottom fade */}
       <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-cyber-black to-transparent z-[5]" />

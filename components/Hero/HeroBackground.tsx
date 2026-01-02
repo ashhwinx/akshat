@@ -70,7 +70,7 @@ const HeroBackground: React.FC = () => {
       <Sparkles count={25} scale={20} size={3} speed={0.4} opacity={0.4} color="#FFD700" />
 
       {/* COINS IMPORTED HERE */}
-      <HeroCoins />
+      {/* <HeroCoins /> */}
     </group>
   );
 };
