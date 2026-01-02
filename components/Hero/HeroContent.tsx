@@ -1,10 +1,48 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-// --- OPTIMIZED ANIMATION CONFIG (Butter Smooth) ---
+// --- OPTIMIZED ANIMATION CONFIG ---
 const smoothTransition = {
   duration: 0.8,
   ease: [0.22, 1, 0.36, 1],
+};
+
+// --- PREMIUM ROLLING TEXT COMPONENT ---
+// Ye text ko shutter ki tarah slide karega hover par
+const RollingText: React.FC<{ text: string; className?: string }> = ({ text, className }) => {
+  return (
+    <div className="relative overflow-hidden block h-[1.1em] leading-[1.1em] group cursor-pointer">
+      <motion.div
+        initial="initial"
+        whileHover="hovered"
+        className="relative"
+      >
+        {/* 1. Original Text (Slides Up & Out) */}
+        <motion.span
+          variants={{
+            initial: { y: 0 },
+            hovered: { y: "-100%" },
+          }}
+          transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
+          className={`block ${className}`}
+        >
+          {text}
+        </motion.span>
+
+        {/* 2. Duplicate Text (Slides Up & In) */}
+        <motion.span
+          variants={{
+            initial: { y: "100%" },
+            hovered: { y: 0 },
+          }}
+          transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
+          className={`absolute inset-0 block ${className}`}
+        >
+          {text}
+        </motion.span>
+      </motion.div>
+    </div>
+  );
 };
 
 // ==========================================
@@ -127,7 +165,7 @@ const EthereumCard: React.FC<{ className?: string }> = ({ className }) => {
 // ==========================================
 const HeroContent: React.FC = () => {
   return (
-    <div className="relative flex flex-col items-center justify-center text-center w-full h-full pointer-events-auto z-20 pb-40 select-none overflow-hidden">
+    <div className="relative flex flex-col items-center justify-center text-center w-full h-full z-20 pb-40 select-none overflow-hidden">
       
       {/* AMBIENT ORBS */}
       <motion.div 
@@ -156,27 +194,34 @@ const HeroContent: React.FC = () => {
       <EthereumCard className="bottom-[20%] left-[5%]" />
 
       {/* TEXT CONTENT */}
-      <div className="relative z-30 flex flex-col items-center">
+      {/* pointer-events-auto ensures buttons and text interactions work over the 3D canvas */}
+      <div className="relative z-30 flex flex-col items-center pointer-events-auto">
         
-        {/* Main Headline - ADDED mb-12 TO KEEP SPACING AFTER REMOVING SUBTEXT */}
+        {/* Main Headline */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9, filter: 'blur(10px)', y: 30 }}
           animate={{ opacity: 1, scale: 1, filter: 'blur(0px)', y: 0 }}
           transition={{ ...smoothTransition, delay: 3.0 }}
           style={{ willChange: "transform, opacity, filter" }}
-          className="flex flex-col items-center leading-[0.85] tracking-tighter mb-16" // Added Margin Bottom here
+          className="flex flex-col items-center leading-[0.85] tracking-tighter mb-16"
         >
-          <h1 className="font-display font-bold text-6xl md:text-[7.5rem] text-white uppercase drop-shadow-2xl">
-            TRADE 
-            <motion.span 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ ...smoothTransition, delay: 3.2 }}
-                className="block font-display font-bold text-6xl md:text-[7.5rem] text-transparent bg-clip-text bg-gradient-to-b from-cyber-silver via-white to-cyber-dim uppercase opacity-90 drop-shadow-lg"
-            >
-             LIMITLESS
-            </motion.span>
-          </h1>
+          {/* TOP LINE: TRADE */}
+          <div className="font-display font-bold text-6xl md:text-[7.5rem] text-white uppercase drop-shadow-2xl">
+             <RollingText text="TRADE" />
+          </div>
+
+          {/* BOTTOM LINE: LIMITLESS (Gradient) */}
+          <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ ...smoothTransition, delay: 3.2 }}
+              className="font-display font-bold text-6xl md:text-[7.5rem] uppercase opacity-90 drop-shadow-lg"
+          >
+             <RollingText 
+               text="LIMITLESS" 
+               className="text-transparent bg-clip-text bg-gradient-to-b from-cyber-silver via-white to-cyber-dim"
+             />
+          </motion.div>
         </motion.div>
 
         {/* Buttons - MORE VISIBLE & STYLISH */}
@@ -187,7 +232,7 @@ const HeroContent: React.FC = () => {
             style={{ willChange: "transform, opacity" }}
             className="flex flex-col sm:flex-row mt-12 mb-8 items-center gap-6"
         >
-          {/* Primary Button: Brighter, White Glow */}
+          {/* Primary Button */}
           <button className="group relative h-12 px-10 overflow-hidden bg-white text-black font-display font-bold text-sm tracking-widest uppercase transition-all duration-200 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.5)] flex items-center justify-center rounded-sm">
               <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-white translate-y-full group-hover:translate-y-0 transition-transform duration-200 ease-out" />
               <span className="relative z-10 flex items-center gap-3">
@@ -196,13 +241,7 @@ const HeroContent: React.FC = () => {
               </span>
           </button>
           
-          {/* Secondary Button: Lighter Border, Clearer Text */}
-          <button className="group relative h-12 px-8 overflow-hidden border border-white/30 hover:border-white/80 bg-white/[0.05] backdrop-blur-sm text-white font-mono text-xs tracking-[0.2em] uppercase transition-all duration-200 hover:bg-white/10 w-[200px] rounded-sm">
-              <span className="relative z-10 group-hover:text-white transition-colors duration-200">
-                VIEW_MARKETS
-              </span>
-              <div className="absolute bottom-0 left-0 w-full h-[1px] bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-          </button>
+          
         </motion.div>
       </div>
 
