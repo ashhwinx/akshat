@@ -12,10 +12,11 @@ import SignatureFooter from './components/Footer/SignatureFooter';
 import Preloader from './components/UI/Preloader';
 import UserProfile from './components/User/UserProfile';
 
+
 const HomePage: React.FC = () => {
   return (
     <main className="relative z-10 bg-cyber-black mb-[100vh] md:mb-[90vh] shadow-[0_20px_50px_rgba(0,0,0,1)]">
-      <Hero />
+      <Hero/>
       <div id="features"><MonolithGrid /></div>
       <div id="protocol"><TechnicalBlueprint /></div>
       <div id="updates"><KineticFeed /></div>

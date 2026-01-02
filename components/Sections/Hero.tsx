@@ -1,43 +1,53 @@
 // @ts-nocheck
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Environment, PerspectiveCamera, Float } from '@react-three/drei';
+import { PerspectiveCamera, PerformanceMonitor } from '@react-three/drei';
 import HeroBackground from '../Hero/HeroBackground';
 import HeroSphere from '../Hero/HeroSphere';
 import HeroContent from '../Hero/HeroContent';
-import * as THREE from 'three';
 import '../../types';
 
 const Hero: React.FC = () => {
+  // OPTIMIZATION: State to dynamically adjust quality based on device speed
+  const [dpr, setDpr] = useState(1.5); 
+
   return (
     <section className="relative w-full h-screen overflow-hidden bg-cyber-black flex flex-col items-center justify-start pt-32">
       
       {/* 3D Scene Layer */}
       <div className="absolute inset-0 z-0">
         <Canvas 
-          dpr={[1, 1.5]} // PERFORMANCE: Cap pixel ratio to 1.5x max
+          // OPTIMIZATION: Dynamic Pixel Ratio. Drops to 0.5 on slow devices, max 1.5 on fast ones.
+          dpr={dpr} 
+          
+          // OPTIMIZATION: Renderer Settings
           gl={{ 
-            antialias: true, 
-            toneMappingExposure: 1.5, 
+            antialias: false, // HUGE performance boost. True is too expensive for mobile.
             powerPreference: "high-performance",
             depth: true,
-            stencil: false 
+            stencil: false,
+            alpha: false // We have a background, so transparency isn't needed on the canvas itself
           }}
         >
-          {/* Camera positioned to look straight at the "horizon" of the sphere */}
+          {/* OPTIMIZATION: PerformanceMonitor automatically detects lag and downgrades quality */}
+          <PerformanceMonitor 
+            onDecline={() => setDpr(1)} // If FPS drops, lower resolution
+            onIncline={() => setDpr(1.5)} // If smooth, increase resolution
+            flipflops={3} // Stop adjusting after 3 tries to prevent flickering
+            onFallback={() => setDpr(0.75)} // Worst case scenario
+          />
+
           <PerspectiveCamera makeDefault position={[0, 0, 6]} fov={45} />
           
           <Suspense fallback={null}>
-            {/* Background */}
-            <HeroBackground />
+            {/* OPTIMIZATION: Lighting removed here because HeroBackground 
+              now handles the Environment and Lights globally. 
+              Duplicating lights kills performance.
+            */}
             
-            {/* Main Sphere Component (The World) */}
+            <HeroBackground />
             <HeroSphere />
             
-            {/* Lighting */}
-            <ambientLight intensity={0.5} />
-            <spotLight position={[0, 10, 5]} angle={0.5} penumbra={1} intensity={2} color="#ffffff" />
-            <pointLight position={[0, -5, 2]} intensity={5} color="#404040" distance={10} />
           </Suspense>
         </Canvas>
       </div>
@@ -47,7 +57,7 @@ const Hero: React.FC = () => {
          <HeroContent />
       </div>
       
-      {/* Bottom fade to seamlessly blend sphere into footer/next section */}
+      {/* Bottom fade */}
       <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-cyber-black to-transparent z-[5]" />
 
     </section>
