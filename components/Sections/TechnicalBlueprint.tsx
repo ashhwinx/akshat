@@ -1,304 +1,222 @@
 import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Shield, Zap, Database, Activity, Terminal } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// --- Configuration ---
-const LAYERS = [
+// --- Data ---
+const FEATURES = [
   {
-    id: "01",
-    title: "SETTLEMENT",
-    sub: "FINALITY_ENGINE",
-    desc: "Instant cryptographic settlement executing on the hyper-ledger via zk-SNARK proofs.",
-    specs: ["TPS: 150K", "LATENCY: 0.4ms", "SHARD: #8841"]
+    id: 1,
+    title: "Instant Settlement",
+    desc: "Zero-knowledge proofs execute instantly on the ledger.",
+    icon: <Shield className="w-6 h-6" />,
+    color: "text-cyan-400",
+    bg: "bg-cyan-500",
+    border: "border-cyan-500/20",
+    metric: "0.04ms LATENCY",
+    graph: [20, 45, 30, 80, 50, 90, 40, 70]
   },
   {
-    id: "02",
-    title: "CONSENSUS",
-    sub: "PROOF_OF_VELOCITY",
-    desc: "Leaderless asynchronous node agreement minimizing latency variance across global peers.",
-    specs: ["NODES: 4K+", "UPTIME: 99.9%", "SYNC: <10ms"]
+    id: 2,
+    title: "Global Consensus",
+    desc: "Leaderless agreement across 4,000+ nodes.",
+    icon: <Activity className="w-6 h-6" />,
+    color: "text-violet-400",
+    bg: "bg-violet-500",
+    border: "border-violet-500/20",
+    metric: "99.99% UPTIME",
+    graph: [60, 65, 70, 72, 75, 80, 85, 90]
   },
   {
-    id: "03",
-    title: "EXECUTION",
-    sub: "WASM_RUNTIME",
-    desc: "Parallelized smart contract execution environment utilizing multi-threaded computation.",
-    specs: ["THREADS: 64", "GAS: <$0.01", "VM: WASM"]
+    id: 3,
+    title: "Hyper Execution",
+    desc: "Parallelized WASM runtime for zero gas costs.",
+    icon: <Zap className="w-6 h-6" />,
+    color: "text-amber-400",
+    bg: "bg-amber-500",
+    border: "border-amber-500/20",
+    metric: "150K TPS",
+    graph: [30, 50, 40, 60, 80, 100, 90, 95]
   },
   {
-    id: "04",
-    title: "STORAGE",
-    sub: "DEEP_ARCHIVE",
-    desc: "Decentralized archival data availability layer with 12x redundancy seeding.",
-    specs: ["SIZE: 40PB", "REDUN: 12x", "RET: ∞"]
+    id: 4,
+    title: "Deep Storage",
+    desc: "Archival layer with 12x redundancy seeding.",
+    icon: <Database className="w-6 h-6" />,
+    color: "text-emerald-400",
+    bg: "bg-emerald-500",
+    border: "border-emerald-500/20",
+    metric: "40PB DATA",
+    graph: [90, 90, 90, 90, 90, 90, 90, 90]
   }
 ];
 
-// --- Visual Sub-Components ---
+// --- Sub-Components ---
 
-const VerticalLine = () => (
-  <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-cyber-dim to-transparent" />
-);
-
-const Crosshair = ({ className }: { className?: string }) => (
-  <div className={`absolute w-10 h-10 ${className}`}>
-    <div className="absolute top-1/2 left-0 w-full h-[1px] bg-cyber-silver/30" />
-    <div className="absolute left-1/2 top-0 h-full w-[1px] bg-cyber-silver/30" />
-    <div className="absolute top-1/2 left-1/2 w-full h-full border border-cyber-silver/20 rounded-full -translate-x-1/2 -translate-y-1/2" />
-  </div>
-);
-
-const HexData = () => (
-  <div className="font-mono text-[9px] text-cyber-silver/20 leading-none select-none pointer-events-none">
-    {Array.from({ length: 8 }).map((_, i) => (
-      <div key={i}>{Math.random().toString(16).substring(2, 10).toUpperCase()}</div>
-    ))}
-  </div>
-);
-
-// --- Isometric Plate Component ---
-interface IsoPlateProps {
-  index: number;
-  isActive: boolean;
-  title: string;
-}
-
-const IsoPlate: React.FC<IsoPlateProps> = ({ index, isActive, title }) => {
+const DetailCard = ({ feature, isActive }) => {
   return (
     <div 
-      className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[260px] h-[260px] md:w-[320px] md:h-[320px] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] will-change-transform`}
-      style={{
-        transform: `
-          translateY(${(index - 1.5) * 45}px) 
-          translateZ(${isActive ? 80 : 0}px)
-          scale(${isActive ? 1 : 0.95})
-        `,
-        zIndex: isActive ? 50 : 10 - index,
-        opacity: isActive ? 1 : 0.3,
-        filter: isActive ? 'none' : 'grayscale(100%) brightness(0.6)',
-      }}
+      className={`
+        absolute inset-0 w-full h-full p-8 md:p-12 flex items-center justify-center
+        transition-all duration-700 ease-out
+        ${isActive ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95 pointer-events-none'}
+      `}
     >
-      {/* The Physical Plate */}
-      <div className={`
-        relative w-full h-full 
-        bg-cyber-black 
-        border ${isActive ? 'border-white' : 'border-white/10'} 
-        shadow-[0_0_40px_rgba(0,0,0,0.9)]
-        transition-colors duration-500
-      `}>
-         {/* Inner Circuitry Background */}
-         <div className="absolute inset-1 border border-dashed border-white/10 opacity-50 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
-         
-         {/* Tech Detail Lines */}
-         <div className="absolute top-4 left-4 w-2 h-2 bg-white/20" />
-         <div className="absolute bottom-4 right-4 w-2 h-2 bg-white/20" />
-         <div className="absolute top-4 right-4 w-8 h-[1px] bg-white/20" />
-         <div className="absolute bottom-4 left-4 w-8 h-[1px] bg-white/20" />
-
-         {/* Center Visual */}
-         <div className="absolute inset-0 flex items-center justify-center transform -rotate-45">
-            {/* Spinning Ring */}
-            <div className={`w-32 h-32 rounded-full border border-dotted border-white/30 flex items-center justify-center ${isActive ? 'animate-[spin_10s_linear_infinite]' : ''}`}>
-               {/* Inner Core */}
-               <div className={`w-20 h-20 bg-white/5 backdrop-blur-md rounded-full border border-white/10 ${isActive ? 'shadow-[0_0_20px_white]' : ''}`} />
+      <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+         {/* Card Header with Icon */}
+         <div className="p-6 border-b border-white/5 flex justify-between items-center bg-black/20">
+            <div className={`p-2 rounded-lg bg-white/5 border border-white/5 ${feature.color}`}>
+               {feature.icon}
             </div>
-            
-            {/* Huge Layer ID Number */}
-            <div className="absolute font-display font-bold text-6xl text-white/5 pointer-events-none select-none mix-blend-overlay">
-               0{index + 1}
-            </div>
+            <span className="font-mono text-xs text-gray-500 uppercase tracking-widest">Sys_Mod_0{feature.id}</span>
          </div>
 
-         {/* Connection Node (Right side) */}
-         <div className={`absolute top-1/2 -right-1 w-2 h-2 bg-white rounded-full transition-all ${isActive ? 'opacity-100 shadow-[0_0_10px_white]' : 'opacity-0'}`} />
+         {/* Technical Viz Area */}
+         <div className="p-6 flex flex-col gap-6">
+            
+            {/* Metric Display */}
+            <div>
+               <span className="text-[10px] uppercase text-gray-500 font-mono block mb-1">Performance Metric</span>
+               <div className={`text-3xl font-bold font-mono ${feature.color}`}>{feature.metric}</div>
+            </div>
+
+            {/* Simulated Graph */}
+            <div className="h-24 w-full flex items-end gap-2 p-2 border border-white/5 rounded bg-black/20">
+               {feature.graph.map((val, i) => (
+                  <div 
+                    key={i} 
+                    className={`flex-1 rounded-t-sm opacity-50 ${feature.bg} transition-all duration-500`}
+                    style={{ 
+                       height: isActive ? `${val}%` : '0%',
+                       transitionDelay: `${i * 50}ms`
+                    }}
+                  />
+               ))}
+            </div>
+
+            {/* Code Line */}
+            <div className="flex items-center gap-2 text-[10px] text-gray-600 font-mono bg-black/40 p-2 rounded border border-white/5">
+               <Terminal className="w-3 h-3" />
+               <span>exec --node {feature.title.toLowerCase().replace(' ', '_')}</span>
+            </div>
+         </div>
       </div>
     </div>
   );
 };
 
-const TechnicalBlueprint: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+const SidebarItem = ({ feature, isActive, progress }) => {
+  return (
+    <div className={`relative pl-8 py-4 mb-4 transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-40'}`}>
+      {/* Base Line (Gray) */}
+      <div className="absolute left-0 top-0 bottom-0 w-1 bg-white/10 rounded-full" />
+      
+      {/* Active Fill Line (Colored) */}
+      <div 
+         className={`absolute left-0 top-0 w-1 ${feature.bg} rounded-full shadow-[0_0_10px_currentColor] transition-all duration-75 ease-linear`}
+         style={{ height: `${progress * 100}%` }}
+      />
+
+      <h3 className={`text-xl font-bold mb-1 transition-colors ${isActive ? 'text-white' : 'text-gray-400'}`}>
+        {feature.title}
+      </h3>
+      <p className="text-sm text-gray-500 max-w-xs leading-relaxed">
+        {feature.desc}
+      </p>
+    </div>
+  );
+};
+
+// --- Main Component ---
+const CoreInfrastructure = () => {
+  const sectionRef = useRef(null);
+  const containerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [localProgress, setLocalProgress] = useState(0);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      
       ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: "top top",
-        end: "+=300%", 
-        pin: true,
-        scrub: 0.5,
+        trigger: sectionRef.current,
+        start: "top top", // When section top hits viewport top
+        end: "bottom bottom", // When section bottom hits viewport bottom
+        pin: containerRef.current, // Pin the Container, not the section
+        scrub: 0.1,
         onUpdate: (self) => {
-          const idx = Math.floor(self.progress * LAYERS.length);
-          setActiveIndex(Math.min(idx, LAYERS.length - 1));
+           // Map total progress (0 to 1) to number of slides (0 to 4)
+           const total = self.progress * FEATURES.length;
+           const idx = Math.floor(total);
+           const clampedIdx = Math.min(idx, FEATURES.length - 1);
+           
+           // Calculate local progress (0 to 1) for the current active slide
+           const currentProgress = total - clampedIdx;
+
+           setActiveIndex(clampedIdx);
+           setLocalProgress(currentProgress);
         }
       });
-    }, containerRef);
+
+    }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
-  const activeLayer = LAYERS[activeIndex];
-
   return (
-    <section ref={containerRef} className="relative w-full h-screen bg-black overflow-hidden flex flex-col border-t border-white/5">
+    // 1. Parent Section controls the SCROLL HEIGHT (400vh = long scroll)
+    <section ref={sectionRef} className="relative w-full h-[400vh] bg-neutral-950">
       
-      {/* --- BACKGROUND: INFINITE TUNNEL --- */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+      {/* 2. The Container that gets PINNED (Sticky) */}
+      <div ref={containerRef} className="h-screen w-full flex flex-col items-center justify-center overflow-hidden">
          
-         {/* Top Fade (Black) */}
-         <div className="absolute top-0 left-0 w-full h-2/3 bg-black z-10" />
-         
-         {/* Bottom Tunnel Grid */}
-         <div className="absolute bottom-0 left-0 w-full h-2/3 perspective-[1000px] z-0 overflow-hidden opacity-30">
-             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black z-20" />
-             <div 
-                 className="absolute bottom-[-50%] left-[-50%] w-[200%] h-[200%] origin-bottom"
-                 style={{ 
-                     backgroundImage: `
-                        linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px), 
-                        linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px)
-                     `,
-                     backgroundSize: '60px 60px',
-                     transform: 'rotateX(60deg) translateY(0)',
-                     animation: 'tunnelMove 10s linear infinite'
-                 }} 
-             />
+         {/* --- HEADER (Outside the Div, Top of Screen) --- */}
+         <div className="absolute top-10 w-full text-center z-20 px-4">
+            <h2 className="text-4xl md:text-6xl font-bold font-display  text-white tracking-tight mb-4">
+               CORE <span className="text-gray-600">INFRASTRUCTURE</span>
+            </h2>
+            <p className="text-gray-500 text-sm md:text-base max-w-lg  mx-auto">
+               Advanced cryptographic primitives enabling the next generation of value exchange.
+            </p>
          </div>
 
-         {/* Static Noise Overlay */}
-         <div className="absolute inset-0 opacity-[0.07] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
-      </div>
-
-      {/* --- MAXIMALIST DECORATIONS (HUD) --- */}
-      <div className="absolute inset-0 z-10 pointer-events-none px-8 md:px-32">
-        <div className="absolute top-1/4 left-10 hidden md:block"><HexData /></div>
-        <div className="absolute bottom-1/4 right-10 hidden md:block text-right"><HexData /></div>
-        
-        <Crosshair className="top-20 left-20 opacity-20" />
-        <Crosshair className="bottom-20 right-20 opacity-20" />
-        
-        <div className="absolute top-32 right-12 w-32 h-[1px] bg-white/20" />
-        <div className="absolute top-32 right-12 w-[1px] h-10 bg-white/20" />
-        <span className="absolute top-[8.5rem] right-12 font-mono text-[9px] text-cyber-silver/50 tracking-widest">SYS_READY</span>
-      </div>
-
-      {/* --- CENTERED HEADER --- */}
-      <div className="relative z-20 w-full pt-24 px-4 flex flex-col items-center justify-center text-center">
-         <div className="inline-flex items-center gap-2 mb-4">
-             <div className="w-16 h-[1px] bg-cyber-silver/30" />
-             <span className="font-mono text-[10px] text-cyber-silver/60 tracking-[0.3em] uppercase">/// Architecture_Stack</span>
-             <div className="w-16 h-[1px] bg-cyber-silver/30" />
-         </div>
-         
-         <h2 className="text-5xl md:text-7xl font-display font-bold text-white tracking-tighter mb-4">
-            CORE <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-400 to-gray-600">INFRASTRUCTURE</span>
-         </h2>
-         
-         <div className="flex items-center gap-4 px-5 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
-             <div className="flex items-center gap-2">
-                 <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_lime]" />
-                 <span className="font-mono text-[10px] text-green-500 tracking-widest uppercase">Live_Feed_Active</span>
-             </div>
-             <div className="w-[1px] h-3 bg-white/20" />
-             <span className="font-mono text-[10px] text-gray-400 tracking-widest">LATENCY: 12ms</span>
-         </div>
-      </div>
-
-      {/* --- MAIN CONTENT (Increased Padding) --- */}
-      <div className="relative z-20 w-full max-w-[1600px] mx-auto flex-grow flex flex-col md:flex-row items-center px-8 md:px-32 lg:px-40 pb-10 mt-8">
-        
-        {/* LEFT: OPEN TEXT LAYOUT (Maximalist) */}
-        <div className="w-full md:w-5/12 h-full flex flex-col justify-center relative pl-4 md:pl-0 pr-8 md:pr-16">
-           
-           <VerticalLine />
-
-           {/* Animated Text Content */}
-           <div className="relative">
-              {/* Giant Background Number */}
-              <div className="absolute -top-20 -left-10 text-[12rem] font-display font-bold text-white/[0.03] select-none leading-none z-0">
-                  {activeLayer.id}
-              </div>
-
-              <div className="relative z-10 flex flex-col gap-6">
-                  {/* Title Block */}
-                  <div>
-                      <div className="flex items-center gap-3 mb-2">
-                          <span className="px-2 py-0.5 border border-cyber-silver/30 bg-white/5 text-[9px] font-mono text-cyber-silver tracking-widest rounded-sm">
-                             MODULE_{activeLayer.id}
-                          </span>
-                          <div className="h-[1px] w-20 bg-cyber-silver/30" />
-                      </div>
-                      <h3 className="text-5xl md:text-7xl font-display font-bold text-white leading-[0.9] tracking-tighter uppercase mb-2">
-                          {activeLayer.title}
-                      </h3>
-                      <span className="font-mono text-sm text-cyber-silver/60 tracking-[0.2em] uppercase">
-                          // {activeLayer.sub}
-                      </span>
-                  </div>
-
-                  {/* Description - Open Text */}
-                  <p className="text-gray-400 font-sans text-base md:text-lg leading-relaxed max-w-md border-l-2 border-white/10 pl-6">
-                      {activeLayer.desc}
-                  </p>
-
-                  {/* Data Specs - Open Grid */}
-                  <div className="flex flex-wrap gap-x-8 gap-y-4 pt-4 mt-4 border-t border-dashed border-white/10">
-                      {activeLayer.specs.map((spec, i) => (
-                          <div key={i} className="flex flex-col">
-                              <span className="text-[9px] font-mono text-gray-600 uppercase mb-1">PARAM_0{i+1}</span>
-                              <span className="text-sm font-mono text-cyber-silver">{spec}</span>
-                          </div>
-                      ))}
-                  </div>
-              </div>
-           </div>
-
-        </div>
-
-        {/* RIGHT: CONTAINED ISOMETRIC STACK (With Right Padding) */}
-        <div className="w-full md:w-7/12 h-[50vh] md:h-full relative flex items-center justify-center perspective-[2000px] overflow-visible md:pr-12">
+         {/* --- MAIN DASHBOARD (Centered) --- */}
+         <div className="relative w-full max-w-6xl h-[60vh] mt-20 bg-[#0A0A0A] border border-white/10 rounded-3xl shadow-2xl flex flex-col md:flex-row overflow-hidden z-10">
             
-           {/* Decorative Floor Ring (Static) */}
-           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-white/5 rounded-full transform rotate-x-[60deg] pointer-events-none" />
+            {/* Left Side: Navigation & Progress */}
+            <div className="w-full md:w-5/12 h-full p-8 md:p-12 flex flex-col justify-center bg-white/[0.02] border-r border-white/5">
+               {FEATURES.map((feature, i) => (
+                  <SidebarItem 
+                     key={feature.id}
+                     feature={feature}
+                     isActive={i === activeIndex}
+                     // Logic: If past, 100%. If future, 0%. If active, use dynamic progress.
+                     progress={i < activeIndex ? 1 : (i === activeIndex ? localProgress : 0)}
+                  />
+               ))}
+            </div>
 
-           {/* The Container for Isometric Rotation - SCALED DOWN */}
-           <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px] transform-style-3d scale-75 md:scale-90" 
-                style={{ transform: 'rotateX(55deg) rotateZ(-45deg)' }}>
-              
-              {/* Render Plates in Stack */}
-              {LAYERS.map((layer, i) => (
-                 <IsoPlate 
-                    key={i} 
-                    index={i} 
-                    isActive={i === activeIndex} 
-                    title={layer.title}
-                 />
-              ))}
+            {/* Right Side: Visual Cards */}
+            <div className="w-full md:w-7/12 h-full relative bg-gradient-to-br from-black to-gray-900/50">
+               {/* Grid Background */}
+               <div className="absolute inset-0 opacity-20 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:32px_32px]" />
+               
+               {/* Cards Stack */}
+               {FEATURES.map((feature, i) => (
+                  <DetailCard 
+                     key={feature.id}
+                     feature={feature}
+                     isActive={i === activeIndex}
+                  />
+               ))}
+            </div>
 
-              {/* Data Connection Line (To Center) */}
-              <div 
-                  className="absolute top-1/2 left-1/2 w-[1px] bg-gradient-to-b from-white via-white/50 to-transparent transform -translate-x-1/2 origin-top transition-all duration-300"
-                  style={{ 
-                      height: '400px', 
-                      transform: `translateZ(100px) translateY(${(activeIndex - 1.5) * 45}px) rotateX(-90deg)` 
-                  }}
-              />
-           </div>
-        </div>
+         </div>
 
       </div>
-
-      <style>{`
-        @keyframes tunnelMove {
-          0% { transform: rotateX(60deg) translateY(0); }
-          100% { transform: rotateX(60deg) translateY(60px); }
-        }
-      `}</style>
     </section>
   );
 };
 
-export default TechnicalBlueprint;
+export default CoreInfrastructure;

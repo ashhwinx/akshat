@@ -70,7 +70,7 @@ const Navbar: React.FC = () => {
           </div>
 
           <span className="font-display font-bold text-lg md:text-xl tracking-tight text-white group-hover:text-cyber-silver transition-colors">
-            GHOST LINK
+           BITCOIN
           </span>
         </div>
 

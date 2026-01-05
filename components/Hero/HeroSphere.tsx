@@ -25,7 +25,7 @@ const HeroSphere: React.FC = () => {
   const positionY = isMobile ? -2.5 : -4.5;
 
   // 2. Grid Coordinates (unchanged logic, just memoized)
-  const particleCount = 6000;
+  const particleCount = 2000;
   const positions = useMemo(() => {
     const pos = new Float32Array(particleCount * 3);
     const radius = 4.5;
